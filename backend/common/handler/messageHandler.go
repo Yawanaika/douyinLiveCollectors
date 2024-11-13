@@ -198,7 +198,7 @@ func parseGiftMessage(payload []byte, out chan<- Result) {
 	toUser := gift.GetToUser().GetNickName()
 	giftName := gift.GetGift().GetName()
 	combo := gift.GetComboCount()
-	currentTime := time.ParseEventTime(gift.GetCommon().GetCreateTime())
+	currentTime := time.Now()
 	log.Info("Received gift message : %s : to %s : %s X %v combo", userName, toUser, giftName, combo)
 	out <- Result{
 		method: enums.WebcastGiftMessage,
@@ -215,7 +215,7 @@ func parseMemberMessage(payload []byte, out chan<- Result) {
 	userId := member.GetUser().GetId()
 	userName := member.GetUser().GetNickName()
 	gender := []string{"女", "男", "unknown"}[member.GetUser().GetGender()]
-	currentTime := time.ParseEventTime(member.GetCommon().GetCreateTime())
+	currentTime := time.Now()
 	log.Info("Received member message : %s (ID: %v, gender: %s) 进入了直播间", userName, userId, gender)
 	out <- Result{
 		method: enums.WebcastMemberMessage,
@@ -237,7 +237,7 @@ func parseRoomRankMessage(payload []byte, out chan<- Result) {
 			"昵称": rank.GetUser().GetNickName(),
 		}
 	}
-	currentTime := time.ParseEventTime(roomRank.GetCommon().GetCreateTime())
+	currentTime := time.Now()
 	log.Info("Received roomRank message : %v", ranks)
 	out <- Result{
 		method: enums.WebcastRoomRankMessage,
@@ -252,7 +252,7 @@ func parseRoomMessage(payload []byte, out chan<- Result) {
 		log.Info(ParseRoomMessageError, err.Error())
 	}
 	roomId := room.GetCommon().GetRoomId()
-	currentTime := time.ParseEventTime(room.GetCommon().GetCreateTime())
+	currentTime := time.Now()
 	log.Info("Received room message : 直播间id: %v", roomId)
 	out <- Result{
 		method: enums.WebcastRoomMessage,
@@ -267,7 +267,7 @@ func parseRoomStatsMessage(payload []byte, out chan<- Result) {
 		log.Info(ParseRoomStatsMessageError, err.Error())
 	}
 	displayLong := roomStats.GetDisplayLong()
-	currentTime := time.ParseEventTime(roomStats.GetCommon().GetCreateTime())
+	currentTime := time.Now()
 	log.Info("Received roomStates message : %v", displayLong)
 	out <- Result{
 		method: enums.WebcastRoomStatsMessage,
@@ -285,7 +285,7 @@ func parseEmojiChatMessage(payload []byte, out chan<- Result) {
 	userName := emoji.GetUser().GetNickName()
 	//common := emoji.GetCommon()
 	defaultContent := emoji.GetDefaultContent()
-	currentTime := time.ParseEventTime(emoji.GetCommon().GetCreateTime())
+	currentTime := time.Now()
 	log.Info("Received emojiChat message : %s : emojiId: %v,defaultContent: %s", userName, emojiId, defaultContent)
 	out <- Result{
 		method: enums.WebcastEmojiChatMessage,
@@ -302,7 +302,7 @@ func parseControlMessage(payload []byte, out chan<- Result) {
 	}
 	if control.GetStatus() == 3 {
 		roomId := control.GetCommon().GetRoomId()
-		currentTime := time.ParseEventTime(control.GetCommon().GetCreateTime())
+		currentTime := time.Now()
 		log.Info("Received control message : 直播间 %v 已结束", roomId)
 		out <- Result{
 			method: enums.WebcastControlMessage,
@@ -318,7 +318,7 @@ func parseFansclubMessage(payload []byte, out chan<- Result) {
 		log.Info(ParseFansclubMessageError, err.Error())
 	}
 	content := fansclub.GetContent()
-	currentTime := time.ParseEventTime(fansclub.GetCommonInfo().GetCreateTime())
+	currentTime := time.Now()
 	log.Info("Received fansclub message : 粉丝团消息: %s", content)
 	out <- Result{
 		method: enums.WebcastFansclubMessage,
@@ -334,7 +334,7 @@ func parseRoomUserSeqMessage(payload []byte, out chan<- Result) {
 	}
 	current := roomUserSeq.GetTotal()
 	total := roomUserSeq.GetTotalPvForAnchor()
-	currentTime := time.ParseEventTime(roomUserSeq.GetCommon().GetCreateTime())
+	currentTime := time.Now()
 	log.Info("Received roomUserSeq message : 当前观看人数: %v , 累计观看人数: %s", current, total)
 	out <- Result{
 		method: enums.WebcastRoomUserSeqMessage,
@@ -350,7 +350,7 @@ func parseSocialMessage(payload []byte, out chan<- Result) {
 	}
 	userName := social.GetUser().GetNickName()
 	userId := social.GetUser().GetId()
-	currentTime := time.ParseEventTime(social.GetCommon().GetCreateTime())
+	currentTime := time.Now()
 	log.Info("Received social message : %s (Id: %v) 关注了主播", userName, userId)
 	out <- Result{
 		method: enums.WebcastSocialMessage,
@@ -366,7 +366,7 @@ func parseLikeMessage(payload []byte, out chan<- Result) {
 	}
 	userName := like.GetUser().GetNickName()
 	count := like.GetCount()
-	currentTime := time.ParseEventTime(like.GetCommon().GetCreateTime())
+	currentTime := time.Now()
 	log.Info("Received like message : %s 点了 %v 个赞", userName, count)
 	out <- Result{
 		method: enums.WebcastLikeMessage,

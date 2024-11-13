@@ -16,7 +16,7 @@
 
 ## GUI:
 
-![img.png](docs/img.png)
+![GUI.png](docs/GUI.png)
 
 ## 运行:
 项目根路径下执行以下命令即可打开GUI:
